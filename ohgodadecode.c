@@ -10,7 +10,7 @@
 // must have (len >> 1) bytes allocated
 // Maybe asciistr just NULL terminated?
 // Returns length of rawstr in bytes
-int ASCIIHexToBinary(void *restrict rawstr, const char *restrict asciistr, size_t len)
+int ASCIIHexToBinary(void *rawstr, const char *asciistr, size_t len)
 {
 	for(int i = 0, j = 0; i < len; ++i)
 	{
