@@ -34,7 +34,7 @@ int main(int argc, char **argv)
 	// Short circuited logic should prevent a segfault.
 	if(argc != 2 || strlen(argv[1]) != 96)
 	{
-		printf("Usage: %s <96-char hex string>\n");
+		printf("Usage: %s <96-char hex string>\n", argv[0]);
 		return(1);
 	}
 	
@@ -47,6 +47,16 @@ int main(int argc, char **argv)
 	printf("TRRD = %d\n", Timings->SEQ_RAS_TIMING.TRRD);
 	printf("TRC = %d\n", Timings->SEQ_RAS_TIMING.TRC);
 	printf("Pad0 = %d\n\n", Timings->SEQ_RAS_TIMING.Pad0);
+	
+	printf("TNOPW = %d\n", Timings->SEQ_CAS_TIMING.TNOPW);
+	printf("TNOPR = %d\n", Timings->SEQ_CAS_TIMING.TNOPR);
+	printf("TR2W = %d\n", Timings->SEQ_CAS_TIMING.TR2W);
+	printf("TCCDL = %d\n", Timings->SEQ_CAS_TIMING.TCCDL);
+	printf("TR2R = %d\n", Timings->SEQ_CAS_TIMING.TR2R);
+	printf("TW2R = %d\n", Timings->SEQ_CAS_TIMING.TW2R);
+	printf("Pad0 = %d\n", Timings->SEQ_CAS_TIMING.Pad0);
+	printf("TCL = %d\n", Timings->SEQ_CAS_TIMING.TCL);
+	printf("Pad1 = %d\n\n", Timings->SEQ_CAS_TIMING.Pad1);
 	
 	printf("TRP_WRA = %d\n", Timings->SEQ_MISC_TIMING.TRP_WRA);
 	printf("Pad0 = %d\n", Timings->SEQ_MISC_TIMING.Pad0);
