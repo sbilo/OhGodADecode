@@ -76,11 +76,11 @@ typedef struct _SEQ_CAS_TIMING_FORMAT
 
 typedef struct _SEQ_MISC_TIMING_FORMAT
 {
-	uint32_t TRP_WRA : 6;
-	uint32_t Pad0 : 2;
+	uint32_t TRP_WRA : 7;
 	uint32_t TRP_RDA : 6;
+	uint32_t Pad0 : 1;
 	uint32_t TRP : 6;
-	uint32_t TRFC : 11;
+	uint32_t TRFC : 9;
 } SEQ_MISC_TIMING_FORMAT;
 
 typedef struct _SEQ_MISC_TIMING2_FORMAT
