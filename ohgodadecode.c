@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include "ohgodadecode.h"
-
+const float version=1.01;
 // Parameter len is the size in bytes of asciistr, meaning rawstr
 // must have (len >> 1) bytes allocated
 // Maybe asciistr just NULL terminated?
@@ -34,6 +34,7 @@ int main(int argc, char **argv)
 	// Short circuited logic should prevent a segfault.
 	if(argc != 2 || strlen(argv[1]) != 96)
 	{
+		printf("OhGodADecode v%.02f\n", version);
 		printf("Usage: %s <96-char hex string>\n", argv[0]);
 		return(1);
 	}
