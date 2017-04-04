@@ -1,3 +1,8 @@
-CFLAGS=--std=c99
+CC=gcc
+CFLAGS=-O3 -Wall --std=c99
 
-ohgodadecode:
+ohgodadecode: ohgodadecode.c
+	$(CC) $(CFLAGS) -o $@ $^
+
+clean:
+	rm -f ohgodadecode
