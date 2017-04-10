@@ -26,10 +26,16 @@ int ASCIIHexToBinary(void *rawstr, const char *asciistr, size_t len)
 	return(len >> 1);
 }
 
+#ifdef STRAP_R9
+#define VBIOS_STRAP VBIOS_STRAP_R9
+#else
+#define VBIOS_STRAP VBIOS_STRAP_RX
+#endif
+
 int main(int argc, char **argv)
 {
 	uint32_t buf[12];
-	VBIOS_TIMING_FORMAT *Timings=(VBIOS_TIMING_FORMAT *)buf;
+	VBIOS_STRAP *Timings=(VBIOS_STRAP*)buf;
 		
 	// Short circuited logic should prevent a segfault.
 	if(argc != 2 || strlen(argv[1]) != 96)
