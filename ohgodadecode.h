@@ -67,7 +67,7 @@ typedef struct _SEQ_CAS_TIMING_FORMAT
 	uint32_t TNOPR : 2;
 	uint32_t TR2W : 5;
 	uint32_t TCCDL : 3;
-	uint32_t TR2R : 4;
+	uint32_t TCCDS : 4;
 	uint32_t TW2R : 5;
 	uint32_t Pad0 : 3;
 	uint32_t TCL : 5;
@@ -101,7 +101,7 @@ typedef struct _SEQ_MISC_TIMING2_FORMAT
 	uint32_t TFAW : 5;
 	uint32_t TCRCRL : 3;
 	uint32_t TCRCWL : 5;
-	uint32_t TFAW32 : 4;
+	uint32_t T32AW : 4;
 	uint32_t Pad2 : 3;
 	uint32_t TWDATATR : 4;
 } SEQ_MISC_TIMING2_FORMAT;
