@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <libconfig.h>
 
 #include "ohgodaencode.h"
 const float version=1.01;
@@ -24,6 +25,10 @@ void ASCIIBinaryToHex(char *result, const uint8_t *data, size_t len)
 #else
 #define VBIOS_STRAP VBIOS_STRAP_RX
 #endif
+
+#define READ_CFG_VAL(GROUP, KEY) \
+	if(config_lookup_int(&cfg, #KEY, &tmp)) \
+		Timings->GROUP.KEY = tmp;
 
 int main(int argc, char **argv)
 {
@@ -76,25 +81,68 @@ int main(int argc, char **argv)
 	Timings->ARB_DRAM_TIMING.ACTWR = 15;
 	Timings->ARB_DRAM_TIMING.RASMACTRD = 41;
 	Timings->ARB_DRAM_TIMING.RASMACTWR = 47;
-	
+
 	Timings->ARB_DRAM_TIMING2.RAS2RAS = 148;
 	Timings->ARB_DRAM_TIMING2.RP = 39;
 	Timings->ARB_DRAM_TIMING2.WRPLUSRP = 49;
 	Timings->ARB_DRAM_TIMING2.BUS_TURN = 22;
 	
-	// Short circuited logic should prevent a segfault.
-	//if(argc != 2 || strlen(argv[1]) != 96)
+	// init config reader
+	config_t cfg;
+	config_setting_t *setting;
+	config_init(&cfg);
+
+	/* Read the file. If there is an error, report it and exit. */
+	if(!config_read_file(&cfg, "timings.cfg"))
 	{
-		printf("OhGodAEncode v%.02f\n", version);
-		//printf("Usage: %s <96-char hex string>\n", argv[0]);
-		//return(1);
+	    fprintf(stderr, "%s:%d - %s\n", config_error_file(&cfg),
+	            config_error_line(&cfg), config_error_text(&cfg));
+    	config_destroy(&cfg);
+    	return(-1);
 	}
+
+	// read config
+	int tmp;
+	READ_CFG_VAL(SEQ_RAS_TIMING, TRCDW);
+	READ_CFG_VAL(SEQ_RAS_TIMING, TRCDWA);
+	READ_CFG_VAL(SEQ_RAS_TIMING, TRCDR);
+	READ_CFG_VAL(SEQ_RAS_TIMING, TRCDRA);
+	READ_CFG_VAL(SEQ_RAS_TIMING, TRRD);
+	READ_CFG_VAL(SEQ_RAS_TIMING, TRC);
 	
-	//ASCIIHexToBinary(buf, argv[1], 96);
-	char hex[97];
-	ASCIIBinaryToHex(hex, buf, 48);
-	//printf("hex=0x%096X\n", hex);
-		
+	READ_CFG_VAL(SEQ_CAS_TIMING, TNOPW);
+	READ_CFG_VAL(SEQ_CAS_TIMING, TNOPR);
+	READ_CFG_VAL(SEQ_CAS_TIMING, TR2W);
+	READ_CFG_VAL(SEQ_CAS_TIMING, TCCDL);
+	READ_CFG_VAL(SEQ_CAS_TIMING, TR2R);
+	READ_CFG_VAL(SEQ_CAS_TIMING, TW2R);
+	READ_CFG_VAL(SEQ_CAS_TIMING, TCL);
+	
+	READ_CFG_VAL(SEQ_MISC_TIMING, TRP_WRA);
+	READ_CFG_VAL(SEQ_MISC_TIMING, TRP_RDA);
+	READ_CFG_VAL(SEQ_MISC_TIMING, TRP);
+	READ_CFG_VAL(SEQ_MISC_TIMING, TRFC);
+	
+	READ_CFG_VAL(SEQ_MISC_TIMING2, PA2RDATA);
+	READ_CFG_VAL(SEQ_MISC_TIMING2, PA2WDATA);
+	READ_CFG_VAL(SEQ_MISC_TIMING2, TFAW);
+	READ_CFG_VAL(SEQ_MISC_TIMING2, TCRCRL);
+	READ_CFG_VAL(SEQ_MISC_TIMING2, TCRCWL);
+	READ_CFG_VAL(SEQ_MISC_TIMING2, TFAW32);
+	
+	READ_CFG_VAL(ARB_DRAM_TIMING, ACTRD);
+	READ_CFG_VAL(ARB_DRAM_TIMING, ACTWR);
+	READ_CFG_VAL(ARB_DRAM_TIMING, RASMACTRD);
+	READ_CFG_VAL(ARB_DRAM_TIMING, RASMACTWR);
+
+	READ_CFG_VAL(ARB_DRAM_TIMING2, RAS2RAS);
+	READ_CFG_VAL(ARB_DRAM_TIMING2, RP);
+	READ_CFG_VAL(ARB_DRAM_TIMING2, WRPLUSRP);
+	READ_CFG_VAL(ARB_DRAM_TIMING2, BUS_TURN);
+	
+	config_destroy(&cfg);
+
+	// print timings
 	printf("TRCDW=%d ", Timings->SEQ_RAS_TIMING.TRCDW);
 	printf("TRCDWA=%d ", Timings->SEQ_RAS_TIMING.TRCDWA);
 	printf("TRCDR=%d ", Timings->SEQ_RAS_TIMING.TRCDR);
@@ -141,6 +189,10 @@ int main(int argc, char **argv)
 	printf("RP=%d " , Timings->ARB_DRAM_TIMING2.RP);
 	printf("WRPLUSRP=%d ", Timings->ARB_DRAM_TIMING2.WRPLUSRP);
 	printf("BUS_TURN=%d\n\n", Timings->ARB_DRAM_TIMING2.BUS_TURN);
+
+	// print results
+	char hex[97];
+	ASCIIBinaryToHex(hex, buf, 48);
 	
 	return(0);
 }
